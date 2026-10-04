@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Following — Eclipse{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <p class="eyebrow">Your people, their latest ideas</p>
+    <h1>Following</h1>
+    <p>A fresh look at pins shared by creators you follow.</p>
+  </section>
+
+  {% if pins %}
+    <section class="masonry">
+      {% for pin in pins %}
+        <article class="pin-card">
+          <a class="pin-image-wrap" href="{{ url_for('pin_detail', pin_id=pin.id) }}">
+            <img src="{{ pin.image }}" alt="{{ pin.title }}" loading="lazy">
+            <span class="save-hover">View pin ↗</span>
+          </a>
+          <div class="pin-caption">
+            <a href="{{ url_for('pin_detail', pin_id=pin.id) }}" class="pin-title">{{ pin.title }}</a>
+            <span class="pin-saves">♥ {{ pin.likes }}</span>
+          </div>
+          <a class="creator" href="{{ url_for('profile', username=pin.username) }}">{{ pin.username }}</a>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">✦</span>
+      <h3>Your Following feed is ready</h3>
+      <p>Follow a creator to see their newest ideas here.</p>
+      <a class="button" href="{{ url_for('index') }}">Explore creators</a>
+    </div>
+  {% endif %}
+{% endblock %}

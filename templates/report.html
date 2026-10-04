@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Report {{ pin.title }} — Eclipse{% endblock %}
+
+{% block content %}
+  <div class="form-page">
+    <a class="back-link" href="{{ url_for('pin_detail', pin_id=pin.id) }}">← Back to pin</a>
+    <p class="eyebrow">Help keep Eclipse welcoming</p>
+    <h1>Report this pin</h1>
+    <p class="muted">Reports are reviewed by the Eclipse moderation team.</p>
+    <form method="post" class="stack-form create-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label>
+        Reason
+        <select name="reason" required>
+          <option value="">Choose a reason</option>
+          <option value="spam">Spam or misleading</option>
+          <option value="harassment">Harassment or harmful content</option>
+          <option value="copyright">Copyright concern</option>
+          <option value="other">Something else</option>
+        </select>
+      </label>
+      <label>More details <span class="optional">optional</span><textarea name="details" rows="4" maxlength="1000" placeholder="Add context for the moderator..."></textarea></label>
+      <button class="button button-wide" type="submit">Send report</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit {{ pin.title }} — Eclipse{% endblock %}
+
+{% block content %}
+  <div class="form-page">
+    <a class="back-link" href="{{ url_for('pin_detail', pin_id=pin.id) }}">← Back to pin</a>
+    <p class="eyebrow">Make an update</p>
+    <h1>Edit your pin</h1>
+    <form method="post" enctype="multipart/form-data" class="stack-form create-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <img class="edit-pin-preview" src="{{ pin.image }}" alt="Current image for {{ pin.title }}">
+      <label>
+        Replace image <span class="optional">optional · PNG, JPG, GIF, WebP</span>
+        <input type="file" name="image" accept="image/png,image/jpeg,image/gif,image/webp">
+      </label>
+      <label>Title<input name="title" required maxlength="120" value="{{ pin.title }}"></label>
+      <label>Description<textarea name="description" rows="4" maxlength="1000">{{ pin.description }}</textarea></label>
+      <label>Link <span class="optional">optional</span><input name="link" type="url" maxlength="500" value="{{ pin.link }}"></label>
+      <button class="button button-wide" type="submit">Save changes</button>
+    </form>
+  </div>
+{% endblock %}

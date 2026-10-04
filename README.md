@@ -17,11 +17,14 @@ The SQLite database (`eclipse.db`) is created automatically and stores account r
 - Account registration, password hashing, login and logout
 - Responsive image discovery feed with search
 - Pin creation from an image URL or local image upload, with creator-only deletion
-- Personal boards, pin saving, and board deletion
-- Creator profile pages and individual pin pages
-- CSRF tokens on forms
+- Personal boards, save/unsave controls, and board deletion
+- Editable pins and creator profiles, including profile photos and bios
+- Creator following feed, pin likes, and comments
+- User reporting and an admin-only moderation queue
+- Password changes, CSRF protection, secure cookie settings, and security headers
+- Image byte validation, image re-encoding, and upload size/pixel limits
 
-This starter app does not include email verification, password reset, moderation, or managed cloud image storage.
+Before a broad public launch, configure `ECLIPSE_ADMIN_EMAIL` to an account you control, set up email verification and password recovery, and establish a moderation response process and database backups. Email features require a managed email provider.
 
 ## Deploy from GitHub with Render
 

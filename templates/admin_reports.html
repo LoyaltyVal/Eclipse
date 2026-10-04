@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports — Eclipse{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <p class="eyebrow">Community care</p>
+    <h1>Open reports</h1>
+    <p>Review reported pins and remove content that violates Eclipse's rules.</p>
+  </section>
+  {% if reports %}
+    <section class="report-list">
+      {% for report in reports %}
+        <article class="report-card">
+          <a href="{{ url_for('pin_detail', pin_id=report.pin_id) }}"><img src="{{ report.image }}" alt="{{ report.title }}"></a>
+          <div class="report-content">
+            <p class="eyebrow">{{ report.reason }} · reported by {{ report.reporter }}</p>
+            <h2>{{ report.title }}</h2>
+            <p>{{ report.details or 'No additional details supplied.' }}</p>
+            <div class="report-actions">
+              <form method="post" action="{{ url_for('dismiss_report', report_id=report.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button class="button button-quiet" type="submit">Mark reviewed</button>
+              </form>
+              <form method="post" action="{{ url_for('remove_reported_pin', report_id=report.id) }}" data-confirm="Remove this pin and all its comments and saves?">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button class="button danger-button" type="submit">Remove pin</button>
+              </form>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <div class="empty-state"><span class="empty-icon">✓</span><h3>You're all caught up</h3><p>There are no open reports right now.</p></div>
+  {% endif %}
+{% endblock %}

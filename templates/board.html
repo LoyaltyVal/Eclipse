@@ -17,7 +17,7 @@
     <p>
       {{ board.description or 'All the ideas you want to keep close.' }}
     </p>
-    <form method="post" action="{{ url_for('delete_board',board_id=board.id) }}" onsubmit="return confirm('Delete this board? Saved pins will remain on Eclipse.');">
+    <form method="post" action="{{ url_for('delete_board',board_id=board.id) }}" data-confirm="Delete this board? Saved pins will remain on Eclipse.">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       <button class="text-button danger">
         Delete board
@@ -49,6 +49,10 @@
             </span>
             {{ pin.username }}
           </a>
+          <form method="post" action="{{ url_for('remove_saved_pin', board_id=board.id, pin_id=pin.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="text-button" type="submit">Remove from board</button>
+          </form>
         </article>
       {% endfor %}
     </section>

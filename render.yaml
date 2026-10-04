@@ -10,6 +10,10 @@ services:
         value: /var/data
       - key: ECLIPSE_SECRET_KEY
         generateValue: true
+      - key: ECLIPSE_COOKIE_SECURE
+        value: "1"
+      - key: ECLIPSE_ADMIN_EMAIL
+        sync: false
     disk:
       name: eclipse-data
       mountPath: /var/data

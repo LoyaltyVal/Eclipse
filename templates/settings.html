@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit profile — Eclipse{% endblock %}
+
+{% block content %}
+  <div class="form-page">
+    <a class="back-link" href="{{ url_for('profile', username=user.username) }}">← Your profile</a>
+    <p class="eyebrow">Make it yours</p>
+    <h1>Edit your profile</h1>
+    <p class="muted">Tell the community a little about what inspires you.</p>
+
+    <form method="post" class="stack-form create-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label>
+        Profile photo URL <span class="optional">optional</span>
+        <input type="url" name="avatar" maxlength="500" value="{{ user.avatar }}" placeholder="https://example.com/photo.jpg">
+      </label>
+      <label>
+        Bio
+        <textarea name="bio" rows="5" maxlength="280" placeholder="A few words about you...">{{ user.bio }}</textarea>
+      </label>
+      <label>Email address<input value="{{ user.email }}" disabled></label>
+      <div class="settings-password">
+        <h2>Change password</h2>
+        <p class="muted">Leave these fields blank to keep your current password.</p>
+        <label>Current password<input type="password" name="current_password" autocomplete="current-password"></label>
+        <label>New password<input type="password" name="new_password" minlength="10" maxlength="128" autocomplete="new-password"></label>
+        <label>Confirm new password<input type="password" name="confirm_password" minlength="10" maxlength="128" autocomplete="new-password"></label>
+      </div>
+      <button class="button button-wide" type="submit">Save profile</button>
+    </form>
+  </div>
+{% endblock %}

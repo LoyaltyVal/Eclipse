@@ -16,6 +16,9 @@
       rel="stylesheet"
     >
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='features.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
   </head>
   <body>
     <header class="topbar">
@@ -32,9 +35,11 @@
           Explore
         </a>
         {% if current_user %}
+          <a href="{{ url_for('following_feed') }}" class="nav-item">Following</a>
           <a href="{{ url_for('boards') }}" class="nav-item">
             My boards
           </a>
+          {% if is_admin %}<a href="{{ url_for('admin_reports') }}" class="nav-item">Reports</a>{% endif %}
         {% endif %}
       </nav>
       <form class="search" action="{{ url_for('index') }}" method="get">
@@ -63,6 +68,7 @@
           <a class="button button-small" href="{{ url_for('create_pin') }}">
             ＋ Create
           </a>
+          <a class="text-button" href="{{ url_for('settings') }}">Settings</a>
           <form method="post" action="{{ url_for('logout') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <button class="text-button" type="submit">

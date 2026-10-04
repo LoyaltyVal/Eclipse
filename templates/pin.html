@@ -34,15 +34,30 @@
           </strong>
         </span>
       </a>
+      <div class="pin-actions">
+        {% if current_user %}
+          <form method="post" action="{{ url_for('toggle_like', pin_id=pin.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="button button-quiet" type="submit">{{ '♥ Liked' if liked else '♡ Like' }} · {{ pin.like_count }}</button>
+          </form>
+        {% else %}
+          <a class="button button-quiet" href="{{ url_for('login') }}">♡ {{ pin.like_count }} likes</a>
+        {% endif %}
+        <span class="pin-saves">{{ pin.saves }} saves · {{ pin.comment_count }} comments</span>
+      </div>
       {% if current_user and current_user.id == pin.user_id %}
+        <a class="text-button" href="{{ url_for('edit_pin', pin_id=pin.id) }}">Edit pin</a>
         <form
           method="post"
           action="{{ url_for('delete_pin', pin_id=pin.id) }}"
-          onsubmit="return confirm('Delete this pin? It will also be removed from any boards where it was saved.');"
+          data-confirm="Delete this pin? It will also be removed from any boards where it was saved."
         >
           <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
           <button class="text-button danger" type="submit">Delete this pin</button>
         </form>
+      {% endif %}
+      {% if current_user and current_user.id != pin.user_id %}
+        <a class="text-button" href="{{ url_for('report_pin', pin_id=pin.id) }}">Report pin</a>
       {% endif %}
       {% if pin.link %}
         <a class="button button-quiet button-wide" href="{{ pin.link }}" target="_blank" rel="noopener">
@@ -56,17 +71,18 @@
             Save to a board
             <select name="board_id" required>
               {% for board in boards %}
-                <option value="{{ board.id }}">
+                <option
+                  value="{{ board.id }}"
+                  data-saved="{{ 'true' if board.id in saved_board_ids else 'false' }}"
+                  {% if saved_board_id == board.id %}selected{% endif %}
+                >
                   {{ board.name }}
                 </option>
               {% endfor %}
             </select>
           </label>
-          <button class="button button-wide">
-            Save pin
-            <span>
-              ＋
-            </span>
+          <button class="button button-wide" type="submit" data-save-toggle>
+            {{ 'Unsave pin' if saved else 'Save pin' }}
           </button>
         </form>
       {% else %}
@@ -76,4 +92,38 @@
       {% endif %}
     </div>
   </div>
+
+  <section class="comments-section">
+    <p class="eyebrow">Community notes</p>
+    <h2>Comments <span class="result-count">{{ comments|length }}</span></h2>
+    {% if current_user %}
+      <form method="post" action="{{ url_for('add_comment', pin_id=pin.id) }}" class="comment-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label class="sr-only" for="comment-body">Write a comment</label>
+        <textarea id="comment-body" name="body" maxlength="2000" rows="3" placeholder="Share a kind thought..." required></textarea>
+        <button class="button" type="submit">Post comment</button>
+      </form>
+    {% else %}
+      <p class="muted"><a href="{{ url_for('login') }}">Log in</a> to join the conversation.</p>
+    {% endif %}
+    <div class="comment-list">
+      {% for comment in comments %}
+        <article class="comment">
+          <a class="mini-avatar" href="{{ url_for('profile', username=comment.username) }}">{{ comment.username[0]|upper }}</a>
+          <div class="comment-body">
+            <a class="comment-author" href="{{ url_for('profile', username=comment.username) }}">{{ comment.username }}</a>
+            <p>{{ comment.body }}</p>
+          </div>
+          {% if current_user and (current_user.id == comment.user_id or current_user.id == pin.user_id) %}
+            <form method="post" action="{{ url_for('delete_comment', comment_id=comment.id) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="text-button" type="submit" aria-label="Delete comment">Delete</button>
+            </form>
+          {% endif %}
+        </article>
+      {% else %}
+        <p class="muted">No comments yet. Start the conversation.</p>
+      {% endfor %}
+    </div>
+  </section>
 {% endblock %}

@@ -1,60 +1,51 @@
 {% extends 'base.html' %}
-{% block title %}
-  {{ profile_user.username }}
-  — Eclipse
-{% endblock %}
+
+{% block title %}{{ profile_user.username }} — Eclipse{% endblock %}
+
 {% block content %}
   <section class="profile-heading">
-    <div class="profile-avatar">
-      {{ profile_user.username[0]|upper }}
-    </div>
-    <p class="eyebrow">
-      An Eclipse collector
-    </p>
-    <h1>
-      {{ profile_user.username }}
-    </h1>
-    <p>
-      {{ pins|length }}
-      {{ 'pins' if pins|length != 1 else 'pin' }}
-      shared
-    </p>
+    {% if profile_user.avatar %}
+      <img class="profile-avatar" src="{{ profile_user.avatar }}" alt="{{ profile_user.username }}'s profile photo">
+    {% else %}
+      <div class="profile-avatar">{{ profile_user.username[0]|upper }}</div>
+    {% endif %}
+    <p class="eyebrow">An Eclipse collector</p>
+    <h1>{{ profile_user.username }}</h1>
+    {% if profile_user.bio %}<p class="profile-bio">{{ profile_user.bio }}</p>{% endif %}
+    <p class="profile-stats">{{ pins|length }} pins · {{ profile_user.follower_count }} followers · {{ profile_user.following_count }} following</p>
+
+    {% if current_user and current_user.id == profile_user.id %}
+      <a class="button button-quiet" href="{{ url_for('settings') }}">Edit profile</a>
+    {% elif current_user %}
+      <form method="post" action="{{ url_for('toggle_follow', username=profile_user.username) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="button" type="submit">{{ 'Following' if is_following else 'Follow' }}</button>
+      </form>
+    {% else %}
+      <a class="button" href="{{ url_for('login') }}">Log in to follow</a>
+    {% endif %}
   </section>
+
   {% if pins %}
     <section class="masonry">
       {% for pin in pins %}
         <article class="pin-card">
-          <a class="pin-image-wrap" href="{{ url_for('pin_detail',pin_id=pin.id) }}">
+          <a class="pin-image-wrap" href="{{ url_for('pin_detail', pin_id=pin.id) }}">
             <img src="{{ pin.image }}" alt="{{ pin.title }}" loading="lazy">
-            <span class="save-hover">
-              View pin ↗
-            </span>
+            <span class="save-hover">View pin ↗</span>
           </a>
           <div class="pin-caption">
-            <a href="{{ url_for('pin_detail',pin_id=pin.id) }}" class="pin-title">
-              {{ pin.title }}
-            </a>
-            <span class="pin-saves">
-              {{ pin.saves }}
-              saves
-            </span>
+            <a href="{{ url_for('pin_detail', pin_id=pin.id) }}" class="pin-title">{{ pin.title }}</a>
+            <span class="pin-saves">♥ {{ pin.likes }}</span>
           </div>
         </article>
       {% endfor %}
     </section>
   {% else %}
     <div class="empty-state">
-      <span class="empty-icon">
-        ✦
-      </span>
-      <h3>
-        No pins yet
-      </h3>
-      <p>
-        When
-        {{ profile_user.username }}
-        shares something, it will show up here.
-      </p>
+      <span class="empty-icon">✦</span>
+      <h3>No pins yet</h3>
+      <p>When {{ profile_user.username }} shares something, it will show up here.</p>
     </div>
   {% endif %}
 {% endblock %}
