@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}
+  {{ board.name }}
+  — Eclipse
+{% endblock %}
+{% block content %}
+  <section class="page-heading board-heading">
+    <a class="back-link" href="{{ url_for('boards') }}">
+      ← My boards
+    </a>
+    <p class="eyebrow">
+      Your collection
+    </p>
+    <h1>
+      {{ board.name }}
+    </h1>
+    <p>
+      {{ board.description or 'All the ideas you want to keep close.' }}
+    </p>
+    <form method="post" action="{{ url_for('delete_board',board_id=board.id) }}" onsubmit="return confirm('Delete this board? Saved pins will remain on Eclipse.');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="text-button danger">
+        Delete board
+      </button>
+    </form>
+  </section>
+  {% if pins %}
+    <section class="masonry">
+      {% for pin in pins %}
+        <article class="pin-card">
+          <a class="pin-image-wrap" href="{{ url_for('pin_detail',pin_id=pin.id) }}">
+            <img src="{{ pin.image }}" alt="{{ pin.title }}" loading="lazy">
+            <span class="save-hover">
+              View pin ↗
+            </span>
+          </a>
+          <div class="pin-caption">
+            <a href="{{ url_for('pin_detail',pin_id=pin.id) }}" class="pin-title">
+              {{ pin.title }}
+            </a>
+            <span class="pin-saves">
+              {{ pin.saves }}
+              saves
+            </span>
+          </div>
+          <a class="creator" href="{{ url_for('profile',username=pin.username) }}">
+            <span class="mini-avatar">
+              {{ pin.username[0]|upper }}
+            </span>
+            {{ pin.username }}
+          </a>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">
+        ✦
+      </span>
+      <h3>
+        Your board is ready
+      </h3>
+      <p>
+        Find something inspiring and save it here.
+      </p>
+      <a class="button" href="{{ url_for('index') }}">
+        Explore ideas
+      </a>
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: eclipse
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: ECLIPSE_DATA_DIR
+        value: /var/data
+      - key: ECLIPSE_SECRET_KEY
+        generateValue: true
+    disk:
+      name: eclipse-data
+      mountPath: /var/data
+      sizeGB: 1

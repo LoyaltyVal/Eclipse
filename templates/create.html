@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}
+  Create a pin — Eclipse
+{% endblock %}
+{% block content %}
+  <div class="form-page">
+    <a class="back-link" href="{{ url_for('index') }}">
+      ← Back to explore
+    </a>
+    <p class="eyebrow">
+      Save a little inspiration
+    </p>
+    <h1>
+      Create a pin
+    </h1>
+    <p class="muted">
+      Share a find, a project, or a thing you just love.
+    </p>
+    <form method="post" enctype="multipart/form-data" class="stack-form create-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label class="upload-box">
+        <span class="upload-symbol">
+          ↥
+        </span>
+        <strong>
+          Drop an image here, or browse
+        </strong>
+        <small>
+          PNG, JPG, GIF or WebP · up to 8 MB
+        </small>
+        <input type="file" name="image" accept="image/png,image/jpeg,image/gif,image/webp">
+      </label>
+      <div class="divider">
+        <span>
+          or use an image link
+        </span>
+      </div>
+      <label>
+        Image URL
+        <input name="image_url" type="url" placeholder="https://example.com/photo.jpg">
+      </label>
+      <label>
+        Title
+        <input name="title" required maxlength="120" placeholder="Give your pin a title">
+      </label>
+      <label>
+        Description
+        <textarea name="description" rows="4" maxlength="1000" placeholder="What makes this one special?">
+        </textarea>
+      </label>
+      <label>
+        Link
+        <span class="optional">
+          optional
+        </span>
+        <input name="link" type="url" placeholder="https://... (where can people find this?)">
+      </label>
+      <button class="button button-wide">
+        Publish pin
+        <span>
+          ↗
+        </span>
+      </button>
+    </form>
+  </div>
+{% endblock %}

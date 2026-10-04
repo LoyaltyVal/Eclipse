@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}
+  {{ profile_user.username }}
+  — Eclipse
+{% endblock %}
+{% block content %}
+  <section class="profile-heading">
+    <div class="profile-avatar">
+      {{ profile_user.username[0]|upper }}
+    </div>
+    <p class="eyebrow">
+      An Eclipse collector
+    </p>
+    <h1>
+      {{ profile_user.username }}
+    </h1>
+    <p>
+      {{ pins|length }}
+      {{ 'pins' if pins|length != 1 else 'pin' }}
+      shared
+    </p>
+  </section>
+  {% if pins %}
+    <section class="masonry">
+      {% for pin in pins %}
+        <article class="pin-card">
+          <a class="pin-image-wrap" href="{{ url_for('pin_detail',pin_id=pin.id) }}">
+            <img src="{{ pin.image }}" alt="{{ pin.title }}" loading="lazy">
+            <span class="save-hover">
+              View pin ↗
+            </span>
+          </a>
+          <div class="pin-caption">
+            <a href="{{ url_for('pin_detail',pin_id=pin.id) }}" class="pin-title">
+              {{ pin.title }}
+            </a>
+            <span class="pin-saves">
+              {{ pin.saves }}
+              saves
+            </span>
+          </div>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">
+        ✦
+      </span>
+      <h3>
+        No pins yet
+      </h3>
+      <p>
+        When
+        {{ profile_user.username }}
+        shares something, it will show up here.
+      </p>
+    </div>
+  {% endif %}
+{% endblock %}

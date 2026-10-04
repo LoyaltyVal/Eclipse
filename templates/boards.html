@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}
+  My boards — Eclipse
+{% endblock %}
+{% block content %}
+  <section class="page-heading">
+    <p class="eyebrow">
+      Your collections, all in one place
+    </p>
+    <h1>
+      My boards
+    </h1>
+    <p>
+      Gather your favorite ideas into collections that make sense to you.
+    </p>
+  </section>
+  <div class="board-layout">
+    <section>
+      <h2 class="section-title">
+        Your collections
+        <span class="result-count">
+          {{ boards|length }}
+        </span>
+      </h2>
+      <div class="board-grid">
+        {% for board in boards %}
+          <a class="board-card" href="{{ url_for('board_detail',board_id=board.id) }}">
+            <div class="board-preview">
+              <span class="preview-star">
+                ✦
+              </span>
+              <span class="preview-count">
+                {{ board.pin_count }}
+                pins
+              </span>
+            </div>
+            <strong>
+              {{ board.name }}
+            </strong>
+            <small>
+              {{ board.description or 'A collection of ideas' }}
+            </small>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+    <aside class="new-board">
+      <p class="eyebrow">
+        Start a collection
+      </p>
+      <h2>
+        Make a new board
+      </h2>
+      <form method="post" class="stack-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label>
+          Board name
+          <input name="name" maxlength="80" required placeholder="e.g. Cozy corners">
+        </label>
+        <label>
+          Description
+          <span class="optional">
+            optional
+          </span>
+          <textarea name="description" rows="3" maxlength="300" placeholder="What's this board about?">
+          </textarea>
+        </label>
+        <button class="button button-wide">
+          Create board ＋
+        </button>
+      </form>
+    </aside>
+  </div>
+{% endblock %}

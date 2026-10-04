@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+eclipse.db
+.eclipse_secret_key
+static/uploads/*
+!static/uploads/.gitkeep

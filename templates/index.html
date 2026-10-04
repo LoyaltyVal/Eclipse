@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}
+  Explore — Eclipse
+{% endblock %}
+{% block content %}
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">
+        A little inspiration goes a long way
+      </p>
+      <h1>
+        Ideas worth
+        <em>
+          keeping.
+        </em>
+      </h1>
+      <p>
+        Discover your next favorite thing, then save it for later.
+      </p>
+      <a class="button" href="{{ url_for('create_pin') if current_user else url_for('register') }}">
+        Start collecting
+        <span>
+          ↗
+        </span>
+      </a>
+    </div>
+    <div class="hero-orbit">
+      <span class="orbit orbit-one">
+      </span>
+      <span class="orbit orbit-two">
+      </span>
+      <span class="orbit-dot">
+        ✦
+      </span>
+      <span class="orbit-label">
+        your corner
+        <br>
+        of the internet
+      </span>
+    </div>
+  </section>
+  <section class="feed-head">
+    <div>
+      <p class="eyebrow">
+        The community is collecting
+      </p>
+      <h2>
+        {% if query %}
+          Results for “
+          {{ query }}
+          ”
+        {% else %}
+          Fresh inspiration
+        {% endif %}
+      </h2>
+    </div>
+    <span class="result-count">
+      {{ pins|length }}
+      {{ 'ideas' if pins|length != 1 else 'idea' }}
+    </span>
+  </section>
+  {% if pins %}
+    <section class="masonry">
+      {% for pin in pins %}
+        <article class="pin-card">
+          <a class="pin-image-wrap" href="{{ url_for('pin_detail', pin_id=pin.id) }}">
+            <img src="{{ pin.image }}" alt="{{ pin.title }}" loading="lazy">
+            <span class="save-hover">
+              View pin ↗
+            </span>
+          </a>
+          <div class="pin-caption">
+            <a href="{{ url_for('pin_detail', pin_id=pin.id) }}" class="pin-title">
+              {{ pin.title }}
+            </a>
+            <span class="pin-saves">
+              {{ pin.saves }}
+              saves
+            </span>
+          </div>
+          <a class="creator" href="{{ url_for('profile', username=pin.username) }}">
+            <span class="mini-avatar">
+              {{ pin.username[0]|upper }}
+            </span>
+            {{ pin.username }}
+          </a>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">
+        ✦
+      </span>
+      <h3>
+        {% if query %}
+          Nothing found just yet
+        {% else %}
+          The canvas is yours
+        {% endif %}
+      </h3>
+      <p>
+        {% if query %}
+          Try another search, or be the first to pin something like this.
+        {% else %}
+          Be the first to add something inspiring to Eclipse.
+        {% endif %}
+      </p>
+      <a class="button" href="{{ url_for('create_pin') if current_user else url_for('register') }}">
+        Create your first pin
+      </a>
+    </div>
+  {% endif %}
+{% endblock %}

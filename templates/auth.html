@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ 'Join Eclipse' if mode == 'register' else 'Welcome back' }} — Eclipse
+{% endblock %}
+
+{% block content %}
+  <div class="auth-layout">
+    <div class="auth-art">
+      <div class="auth-orb">e</div>
+      <p class="eyebrow">Make room for inspiration</p>
+      <h2>Collect what<br>moves <em>you.</em></h2>
+      <p>Little ideas add up to a life that feels like your own.</p>
+    </div>
+
+    <section class="auth-card">
+      <p class="eyebrow">
+        {{ 'Your next chapter starts here' if mode == 'register' else 'Good to have you back' }}
+      </p>
+      <h1>{{ 'Create your account' if mode == 'register' else 'Welcome back' }}</h1>
+      <p class="muted">
+        {{ 'Join a community of curious collectors.' if mode == 'register' else 'Sign in to pick up where you left off.' }}
+      </p>
+
+      <form method="post" class="stack-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        {% if mode == 'register' %}
+          <label>
+            Your name
+            <input
+              name="username"
+              required
+              minlength="3"
+              maxlength="30"
+              autocomplete="username"
+              placeholder="e.g. alexcreates"
+            >
+          </label>
+          <label>
+            Email address
+            <input
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder="you@example.com"
+            >
+          </label>
+        {% else %}
+          <label>
+            Email or username
+            <input
+              name="identity"
+              required
+              autocomplete="username"
+              placeholder="Your email or username"
+            >
+          </label>
+        {% endif %}
+
+        <label>
+          Password
+          <input
+            name="password"
+            type="password"
+            required
+            minlength="8"
+            autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}"
+            placeholder="At least 8 characters"
+          >
+        </label>
+
+        <button class="button button-wide" type="submit">
+          {{ 'Create account' if mode == 'register' else 'Log in' }} <span>↗</span>
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        {{ 'Already have an account?' if mode == 'register' else 'New to Eclipse?' }}
+        <a href="{{ url_for('login') if mode == 'register' else url_for('register') }}">
+          {{ 'Log in' if mode == 'register' else 'Create an account' }}
+        </a>
+      </p>
+    </section>
+  </div>
+{% endblock %}

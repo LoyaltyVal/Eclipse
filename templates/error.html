@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+  {{ code }}
+  — Eclipse
+{% endblock %}
+{% block content %}
+  <div class="empty-state error-state">
+    <span class="empty-icon">
+      {{ code }}
+    </span>
+    <h1>
+      Off the map
+    </h1>
+    <p>
+      {{ message }}
+    </p>
+    <a class="button" href="{{ url_for('index') }}">
+      Back to explore
+    </a>
+  </div>
+{% endblock %}
